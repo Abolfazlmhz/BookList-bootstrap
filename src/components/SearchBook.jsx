@@ -2,7 +2,6 @@ import { useState, useContext, useMemo, useCallback } from "react";
 import { ThemeContext, BookContext } from "../App";
 import ShowBook from "./ShowBook";
 
-
 const SearchBook = () => {
   const theme = useContext(ThemeContext);
   const { books, fetch } = useContext(BookContext);
