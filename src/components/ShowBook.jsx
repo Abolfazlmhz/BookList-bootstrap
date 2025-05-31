@@ -2,30 +2,34 @@ import { NavLink, Link, useNavigate } from "react-router-dom";
 import { ThemeContext } from "../App";
 import { useContext } from "react";
 import { toast, Slide } from "react-toastify";
-import axios from "axios";
+import { useDispatch } from "react-redux";
+import { deleteBook } from "../features/bookSlice";
 import "react-toastify/dist/ReactToastify.css";
 
-const deleteBook = async (id, fetchBook, navigate) => {
-  try {
-    await axios.delete(`http://localhost:9000/books/${id}`);
-    toast.success("کتاب حذف شد 😁", {
-      autoClose: 3000,
-      theme: "colored",
-      transition: Slide,
-    });
-    fetchBook();
-    navigate("/");
-  } catch (error) {
-    toast.error("خطایی رخ داد 😥", {
-      autoClose: 3000,
-      theme: "colored",
-      transition: Slide,
-    });
-  }
-};
-let ShowBooks = ({ books, fetchBook }) => {
+
+let ShowBooks = ({ books }) => {
+
   const navigate = useNavigate();
   const theme = useContext(ThemeContext);
+  const dispatch = useDispatch();
+  const handleDelete = async (id) => {
+    try {
+      await dispatch(deleteBook(id)).unwrap(); // صبر می‌کنه تا حذف تموم بشه
+      toast.success("کتاب حذف شد 😁", {
+        autoClose: 3000,
+        theme: "colored",
+        transition: Slide,
+      });
+      navigate("/");
+    } catch (error) {
+      toast.error("خطایی رخ داد 😥", {
+        autoClose: 3000,
+        theme: "colored",
+        transition: Slide,
+      });
+    }
+  };
+
   return (
     <>
       <h5 style={{ color: theme === "light" ? "black" : "white" }}>کتاب ها</h5>
@@ -57,7 +61,7 @@ let ShowBooks = ({ books, fetchBook }) => {
               ویرایش
             </Link>
             <button
-              onClick={() => deleteBook(book.id, fetchBook, navigate)}
+              onClick={() => handleDelete(book.id)}
               className="btn btn-danger text-center"
               style={{ fontSize: ".9rem", width: "40%" }}
             >

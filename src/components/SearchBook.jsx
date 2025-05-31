@@ -1,12 +1,14 @@
 import { useState, useContext, useMemo, useCallback } from "react";
 import { ThemeContext, BookContext } from "../App";
 import ShowBook from "./ShowBook";
+import { useSelector } from "react-redux";
 
 const SearchBook = () => {
   const theme = useContext(ThemeContext);
-  const { books, fetch } = useContext(BookContext);
+ 
 
   const [searchWhat, setSearchWhat] = useState("");
+  const books = useSelector((state) => state.books.items);
 
   let filteredBooks = useMemo(
     () => books.filter((book) => book.نام.includes(searchWhat)),
@@ -37,7 +39,7 @@ const SearchBook = () => {
         className="form-control form-text"
         placeholder="جستجوی کتاب"
       />
-      <ShowBook books={filteredBooks} fetchBook={fetch} />
+      <ShowBook books={filteredBooks} />
     </div>
   );
 };
