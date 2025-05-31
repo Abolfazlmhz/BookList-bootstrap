@@ -3,19 +3,17 @@ import ShowTimer from "./components/ShowTimer";
 import ChangeTheme from "./components/changeTheme";
 import { Outlet, useNavigate } from "react-router-dom";
 import { createContext, useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { fetchBooks } from "./features/booksSlice";
-
 
 export const ThemeContext = createContext("light");
 function App() {
   const dispatch = useDispatch();
-  const { items, status, error } = useSelector((state) => state.books);
 
   const savedTheme = localStorage.getItem("theme") || "light";
   const [theme, setTheme] = useState(savedTheme);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     dispatch(fetchBooks());
   }, [dispatch]);
@@ -50,10 +48,10 @@ function App() {
         </div>
         <hr style={{ color: theme === "light" ? "black" : "white" }} />
         <div className="d-flex align-items-start">
-            <ShowTimer />
-            <SearchBook />
-            <Outlet />
-            <ChangeTheme />
+          <ShowTimer />
+          <SearchBook />
+          <Outlet />
+          <ChangeTheme />
         </div>
       </ThemeContext.Provider>
     </div>

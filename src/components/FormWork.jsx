@@ -1,14 +1,16 @@
 import React, { useContext, useEffect } from "react";
-import { ThemeContext, BookContext } from "../App";
+import { ThemeContext } from "../App";
 import { useForm } from "react-hook-form";
-import axios from "axios";
 import { toast, Slide } from "react-toastify";
 import { useParams, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { addBook, updateBook, selectBookById } from "../features/booksSlice";
+
 
 const FormWork = (props) => {
-  console.log(props,"ok");
+  console.log(props, "ok");
+  const dispatch = useDispatch();
   
-  const { books, fetch } = useContext(BookContext);
   const theme = useContext(ThemeContext);
   const {
     register,
@@ -16,11 +18,14 @@ const FormWork = (props) => {
     setValue,
     formState: { errors },
   } = useForm();
-
+  
   const { id: editId } = useParams();
   const navigate = useNavigate();
+  
+  const editBook = useSelector((state) =>
+    editId ? selectBookById(state, editId) : null
+  );
 
-  const editBook = !isNaN(editId) && books.find((book) => book.id === editId);
 
   useEffect(() => {
     if (editBook) {
@@ -32,7 +37,7 @@ const FormWork = (props) => {
       setValue("نویسنده", "");
       setValue("قیمت", "");
     }
-  }, [editBook]);
+  }, [setValue,editBook]);
 
   if (editId && !editBook) {
     return (
@@ -47,20 +52,17 @@ const FormWork = (props) => {
 
   const onSubmit = async (data) => {
     const newBook = {
-      id: isNaN(editId)
-        ? `${parseInt(books[books.length - 1].id) + 1}`
-        : editId,
+      id: editId ? editId : String(Date.now()),
       نام: data.نام,
       نویسنده: data.نویسنده,
       قیمت: data.قیمت,
     };
     try {
-      if (isNaN(editId)) {
-        await axios.post("http://localhost:9000/books", newBook);
+      if (editId) {
+        await dispatch(updateBook(newBook)).unwrap();
       } else {
-        await axios.put(`http://localhost:9000/books/${editId}`, newBook);
+        await dispatch(addBook(newBook)).unwrap();
       }
-      fetch();
       navigate(`/BookList/${newBook.id}`);
       toast.success("با موفقیت انجام شد 😁", {
         autoClose: 3000,

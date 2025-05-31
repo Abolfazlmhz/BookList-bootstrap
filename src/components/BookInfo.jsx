@@ -1,18 +1,22 @@
-import { useContext } from "react";
+import React from "react";
 import { useParams } from "react-router-dom";
-import { BookContext } from "../App";
+import { useSelector } from "react-redux";
+import { selectBookById } from "../features/booksSlice";
 
 const BookInfo = () => {
-  const { books } = useContext(BookContext);
   const { id } = useParams();
-  if (books.length === 0) {
+
+  const book = useSelector((state) => selectBookById(state, id));
+  const status = useSelector((state) => state.books.status);
+
+  if (status === "loading") {
     return <h4 className="text-center my-5 mx-auto">در حال بارگذاری...</h4>;
   }
 
-  const book = books.find((b) => b.id === id);
   if (!book) {
     return <h4 className="p-2">کتاب پیدا نشد</h4>;
   }
+
   return (
     <div
       className="card text-bg-light text-center my-5 mx-auto"
@@ -26,4 +30,5 @@ const BookInfo = () => {
     </div>
   );
 };
+
 export default BookInfo;

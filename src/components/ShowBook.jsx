@@ -3,7 +3,7 @@ import { ThemeContext } from "../App";
 import { useContext } from "react";
 import { toast, Slide } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { deleteBook } from "../features/bookSlice";
+import { deleteBook } from "../features/booksSlice";
 import "react-toastify/dist/ReactToastify.css";
 
 

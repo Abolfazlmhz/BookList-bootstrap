@@ -1,14 +1,15 @@
 import { useState, useContext, useMemo, useCallback } from "react";
-import { ThemeContext, BookContext } from "../App";
+import { ThemeContext } from "../App";
 import ShowBook from "./ShowBook";
 import { useSelector } from "react-redux";
+import {selectAllBooks} from "../features/booksSlice"
 
 const SearchBook = () => {
   const theme = useContext(ThemeContext);
  
 
   const [searchWhat, setSearchWhat] = useState("");
-  const books = useSelector((state) => state.books.items);
+  const books = useSelector(selectAllBooks);
 
   let filteredBooks = useMemo(
     () => books.filter((book) => book.نام.includes(searchWhat)),
